@@ -12,7 +12,7 @@ const PROJECT_URL = process.env.PROJECT_URL || '';    // 需要上传订阅或�
 const AUTO_ACCESS = process.env.AUTO_ACCESS || false; // false关闭自动保活，true开启,需同时填写PROJECT_URL变量
 const FILE_PATH = process.env.FILE_PATH || './tmp';   // 运行目录,sub节点文件保存目录
 const SUB_PATH = process.env.SUB_PATH || 'sub';       // 订阅路径
-const PORT = process.env.SERVER_PORT || process.env.PORT || 51735;        // http服务订阅端口
+const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;        // http服务订阅端口
 const UUID = process.env.UUID || '911920d8-898a-4cbe-aa3f-9cbf401694f7'; // 使用哪吒v1,在不同的平台运行需修改UUID,否则会覆盖
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';        // 哪吒v1填写形式: nz.abc.com:8008  哪吒v0填写形式：nz.abc.com
 const NEZHA_PORT = process.env.NEZHA_PORT || '';            // 使用哪吒v1请留空，哪吒v0需填写
@@ -424,12 +424,12 @@ async function extractDomains() {
           }
         }
         killBotProcess();
-        await new Promise((resolve) => setTimeout(resolve, 51735));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         const args = `tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile ${FILE_PATH}/boot.log --loglevel info --url http://localhost:${ARGO_PORT}`;
         try {
           await exec(`nohup ${botPath} ${args} >/dev/null 2>&1 &`);
           console.log(`${botName} is running`);
-          await new Promise((resolve) => setTimeout(resolve, 51735));
+          await new Promise((resolve) => setTimeout(resolve, 3000));
           await extractDomains(); // 重新提取域名
         } catch (error) {
           console.error(`Error executing command: ${error}`);
@@ -443,14 +443,14 @@ async function extractDomains() {
 // 获取isp信息
 async function getMetaInfo() {
   try {
-    const response1 = await axios.get('https://ipapi.co/json/', { timeout: 51735 });
+    const response1 = await axios.get('https://ipapi.co/json/', { timeout: 3000 });
     if (response1.data && response1.data.country_code && response1.data.org) {
       return `${response1.data.country_code}_${response1.data.org}`;
     }
   } catch (error) {
       try {
         // 备用 ip-api.com 获取isp
-        const response2 = await axios.get('http://ip-api.com/json/', { timeout: 51735 });
+        const response2 = await axios.get('http://ip-api.com/json/', { timeout: 3000 });
         if (response2.data && response2.data.status === 'success' && response2.data.countryCode && response2.data.org) {
           return `${response2.data.countryCode}_${response2.data.org}`;
         }
